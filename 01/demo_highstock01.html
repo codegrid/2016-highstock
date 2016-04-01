@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Highstockのシンプルなデモ</title>
+<meta charset="utf-8">
+<link rel='stylesheet' href='demo.css' type='text/css' media='all' />
+<script src="/lib/moment/moment.min.js"></script>
+<script src="/lib/underscore/underscore.min.js"></script>
+<!--
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/highcharts/highcharts.min.js"></script>
+<script src="http://code.highcharts.com/stock/highstock.js"></script>
+-->
+<script src="/lib/highcharts/highstock.min.js"></script>
+<!--
+<script src="/lib/highcharts/exporting.min.js"></script>
+-->
+<script src="/common/demo_data.js"></script>
+</head>
+<body>
+<div id="container"></div>
+<script>
+var chart = new Highcharts.StockChart({
+
+  // グラフの描画先要素のid属性値を指定（必須）
+  chart: {renderTo: 'container'},
+
+  // グラフのデータ
+  series: [
+    {
+      name: '稼働時間',
+   // data: [ [日時, 値], [日時, 値], [日時, 値], ... ],
+      data: DEMO_DATA_A,
+    },
+    {
+      name: '停止時間',
+   // data: [ [日時, 値], [日時, 値], [日時, 値], ... ],
+      data: DEMO_DATA_B,
+    }
+  ],
+
+  xAxis: {
+    labels: {
+      staggerLines: 2
+    }
+  },
+
+  // Zoom の３つ目のボタンを選択
+  rangeSelector: {selected: 2},
+
+  // 凡例（グラフ下部のグラフ名）を表示
+  legend: {enabled: true},
+
+  // Y軸の見出しを表示
+  yAxis: {title: {text: '時間'}}
+});
+</script>
+</body>
+</html>

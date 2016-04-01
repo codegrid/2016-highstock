@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Highstockのシンプルなデモ</title>
+<meta charset="utf-8">
+<link rel='stylesheet' href='demo.css' type='text/css' media='all' />
+<script src="/lib/moment/moment.min.js"></script>
+<script src="/lib/underscore/underscore.min.js"></script>
+<!--
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/highcharts/highcharts.min.js"></script>
+<script src="http://code.highcharts.com/stock/highstock.js"></script>
+-->
+<script src="/lib/highcharts/highstock.min.js"></script>
+<!--
+<script src="/lib/highcharts/exporting.min.js"></script>
+-->
+<script src="/common/demo_data.js"></script>
+</head>
+<body>
+<div id="container"></div>
+<script>
+
+// X軸、Y軸における日付フォーマット
+var axisDateFormats = {
+  millisecond: '%Y/%b/%d %H:%M:%S.%L',
+  second: '%Y/%b/%d %H:%M:%S',
+  minute: '%Y/%b/%d %H:%M',
+  hour: '%Y/%b/%d %H:%M',
+  day: '%Y/%b/%d',
+  week: '%Y/%b/%d', // X軸、Y軸では YYYY/MM/DD で表示
+  month: '%Y/%b',
+  year: '%Y'
+};
+
+// ツールチップにおける日付フォーマット
+var tooltipDateFormats = {
+  millisecond: '%Y/%b/%d %H:%M:%S.%L',
+  second: '%Y/%b/%d %H:%M:%S',
+  minute: '%Y/%b/%d %H:%M',
+  hour: '%Y/%b/%d %H:%M',
+  day: '%Y/%b/%d',
+  week: '%Y/%b/%d(月)の週', // ツールチップでは YYYY/MM/DD(月)の週 で表示
+  month: '%Y/%b',
+  year: '%Y'
+};
+
+// グループ化した時のツールチップにおける日付フォーマット
+var groupingDateFormats = {
+  millisecond: ['%Y/%b/%d %H:%M:%S.%L'],
+  second: ['%Y/%b/%d %H:%M:%S'],
+  minute: ['%Y/%b/%d %H:%M'],
+  hour: ['%Y/%b/%d %H:%M'],
+  day: ['%Y/%b/%d'],
+  week: ['%Y/%b/%d(月)の週'], // ツールチップでは YYYY/MM/DD(月)の週 で表示
+  month: ['%Y/%b'],
+  year: ['%Y']
+};
+
+Highcharts.setOptions({
+  global: {
+    // useUTC: false,
+    // timezoneOffset: new Date().getTimezoneOffset(),
+    timezoneOffset: new Date().getTimezoneOffset(),
+    // getTimezoneOffset: function ( timestamp ) {
+    //   return new Date().getTimezoneOffset();
+    // },
+  },
+  lang: {
+
+    // 印刷・ダウンロードのコンテキストメニューのツールチップの日本語化
+    contextButtonTitle: "印刷・ダウンロード",
+
+    // 印刷コンテキストメニューの日本語化
+    printChart: "グラフの印刷",
+
+    // ダウンロードのコンテキストメニューの日本語化
+    downloadJPEG: 'JPEG形式でダウンロード',
+    downloadPDF: 'PDF形式でダウンロード',
+    downloadPNG: 'PNG形式でダウンロード',
+    downloadSVG: 'SVG形式でダウンロード',
+
+    // 日付表示の日本語化
+    months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+    shortMonths: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+    weekdays: ['日', '月', '火', '水', '木', '金', '土'],
+
+    // レンジセレクタの日本語化
+    rangeSelectorFrom: '開始',
+    rangeSelectorTo: '終了',
+    rangeSelectorZoom: '表示期間',
+
+    // 表示期間のリセットボタンラベルの日本語化
+    resetZoom: '表示期間をリセット',
+
+    // 表示期間のリセットボタンラベルのツールチップの日本語化
+    resetZoomTitle: '表示期間をリセット',
+
+    // 単位の省略表示(1000 -> k)の設定。nullを指定することで省略表示を抑止
+    numericSymbols: null,
+
+    // 数字の３桁単位の区切り文字
+    thousandsSep: ',',
+
+  },
+
+  plotOptions: {
+    series: {
+      dataGrouping: {
+        dateTimeLabelFormats: groupingDateFormats
+      }
+    }
+  },
+
+  tooltip:{
+    dateTimeLabelFormats: tooltipDateFormats,
+    valueDecimals: 0
+  },
+
+  xAxis: {
+    dateTimeLabelFormats: axisDateFormats,
+  },
+
+  yAxis: {
+    dateTimeLabelFormats: axisDateFormats,
+  },
+
+  rangeSelector: {
+
+    // global.useUTC:falseの場合は以下補正が必要
+    // inputDateParser: function (value) {
+    //   var date = new Date(value);
+    //   date.setHours( date.getHours() - date.getTimezoneOffset() / 60 );
+    //   return date.getTime();
+    // },
+
+    // ボタンのデザイン
+    buttonTheme: {
+      width: 34,
+      r: 2, // コーナーを丸める
+      states: {
+        select: { // 選択時のデサイン
+          fill: '#00aaff',
+          style: {
+            color: 'white'
+          }
+        }
+      }
+    },
+    buttons: [
+      {
+        type: 'month', // 月単位
+        count: 1,      // １ヶ月
+        text: '1ヶ月'   // ボタンのラベル
+      },
+      {
+        type: 'month',
+        count: 3,
+        text: '3ヶ月'
+      },
+      {
+        type: 'month',
+        count: 6,
+        text: '6ヶ月'
+      },
+      {
+        type: 'year',
+        count: 1,
+        text: '1年'
+      },
+      {
+        type: 'all',
+        text: 'すべて'
+      }
+    ],
+
+    // 日付指定フィールドのフォーマット
+    // inputDateFormat: '%Y/%b/%d %H:%M:%S',
+    inputDateFormat: '%Y/%b/%d',
+
+    // フォーカス時の日付指定フィールドのフォーマット
+    // inputEditDateFormat: '%Y/%b/%d %H:%M:%S',
+    inputEditDateFormat: '%Y/%b/%d',
+
+  },
+
+});
+
+var chart = new Highcharts.StockChart({
+
+  // // resetZoom、resetZoomTitleパラメータのテスト設定
+  // chart: {
+  //   renderTo: 'container',
+  //   zoomType:'x'
+  // },
+  // navigator: {
+  //   enabled: false
+  // },
+  // rangeSelector: {
+  //   enabled: false
+  // },
+
+  // グラフの描画先要素のid属性値を指定（必須）
+  chart: {renderTo: 'container'},
+
+  // グラフのデータ
+  series: [
+    {
+      name: '稼働時間',
+   // data: [ [日時, 値], [日時, 値], [日時, 値], ... ],
+      data: DEMO_DATA_A,
+    },
+    {
+      name: '停止時間',
+   // data: [ [日時, 値], [日時, 値], [日時, 値], ... ],
+      data: DEMO_DATA_B,
+    }
+  ],
+
+  // Zoom の３つ目のボタンを選択
+  rangeSelector: {selected: 2},
+
+  // 凡例（グラフ下部のグラフ名）を表示
+  legend: {enabled: true},
+
+  // Y軸の見出しを表示
+  yAxis: {title: {text: '時間'}},
+
+  // ラベルのY軸を交互にずらす
+  xAxis: {
+    labels: {
+      staggerLines: 2
+    }
+  },
+
+});
+</script>
+</body>
+</html>
