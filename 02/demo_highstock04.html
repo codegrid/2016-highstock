@@ -1,25 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Highstockを日本語環境に合わせるデモ</title>
+<title>Highstockとデートピッカーを連携させるデモ</title>
 <meta charset="utf-8">
 <link rel='stylesheet' href='../common/demo.css' type='text/css' media='all' />
+
+<link rel='stylesheet' href='../lib/pickadate/default.css' type='text/css' media='all' />
+<link rel='stylesheet' href='../lib/pickadate/default.date.css' type='text/css' media='all' />
+
 <script src="../lib/moment/moment.min.js"></script>
 <script src="../lib/underscore/underscore.min.js"></script>
-<!--
 <script src="../lib/jquery/jquery.min.js"></script>
+<script src="../lib/pickadate/picker.js"></script>
+<script src="../lib/pickadate/picker.date.js"></script>
+<script src="../lib/pickadate/legacy.js"></script>
+
+<!--
 <script src="../lib/highcharts/highcharts.min.js"></script>
 <script src="http://code.highcharts.com/stock/highstock.js"></script>
 -->
 <script src="../lib/highcharts/highstock.min.js"></script>
-<!--
 <script src="../lib/highcharts/exporting.min.js"></script>
--->
 <script src="../common/demo_data.js"></script>
 </head>
 <body>
+<hr/>
 <div id="container"></div>
 <script>
+
+jQuery.extend( jQuery.fn.pickadate.defaults, {
+  monthsFull: [ '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月' ],
+  monthsShort: [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12' ],
+  weekdaysFull: [ '日曜' , '月曜', '火曜', '水曜', '木曜', '金曜', '土曜'],
+  weekdaysShort: [ '日' ,  '月', '火', '水', '木', '金', '土'],
+  today: '今日',
+  clear: null,
+  close: '閉じる',
+  format: 'yyyy/mm/dd'
+});
+function connectPickadate(renderTo, series){
+
+  var range = series.reduce(function(prev, item){
+    var min = moment(item.data[0][0]).toDate();
+    var max = moment(item.data[item.data.length-1][0]).toDate();
+    if(!prev.min || prev.min > min) prev.min = min;
+    if(!prev.max || prev.max < max) prev.max = max;
+    return prev;
+  }, {});
+
+  var container = typeof renderTo === 'string' ? '#'+renderTo : renderTo;
+  var $rangeSelectors = $('input.highcharts-range-selector', container);
+  $rangeSelectors.each(function(index, el){
+    $(el).pickadate({
+      min: range.min,
+      max: range.max
+    }).on('focus', function(){
+      var picker = $(this).pickadate('picker');
+      picker.set('select', moment(this.value, 'YYYY/MM/DD').toDate())
+      setTimeout(function(){
+        picker.open();
+      },0);
+    });
+  });
+}
+
 
 // X軸、Y軸における日付フォーマット
 var axisDateFormats = {
@@ -186,6 +230,24 @@ Highcharts.setOptions({
 
 });
 
+console.log('hasData',Highcharts.Axis.prototype.hasData);
+
+
+
+
+
+
+Highcharts.Axis.prototype.hasData = function () {
+  return this.hasVisibleSeries||t(this.min)&&t(this.max)&&!!this.tickPositions;
+};
+
+// Highcharts.Axis.prototype.hasData = function () {
+//     return this.hasVisibleSeries;
+// };
+
+
+
+
 var chart = new Highcharts.StockChart({
 
   // // resetZoom、resetZoomTitleパラメータのテスト設定
@@ -201,11 +263,26 @@ var chart = new Highcharts.StockChart({
   // },
 
   // グラフの描画先要素のid属性値を指定（必須）
-  chart: {renderTo: 'container'},
+  chart: {
+    // renderTo: 'container',
+    renderTo: document.querySelector('#container'),
+    events:{
+      load: function(event){
+        var options = event.target.options;
+        connectPickadate(
+          options.chart.renderTo,
+          options.series
+        );
+      }
+    }
+  },
 
   // グラフのデータ
   series: [
     {
+      // tooltip:{
+      //   valueSuffix:' 分',
+      // },
       name: '稼働時間',
    // data: [ [日時, 値], [日時, 値], [日時, 値], ... ],
       data: DEMO_DATA_A,
@@ -216,6 +293,10 @@ var chart = new Highcharts.StockChart({
       data: DEMO_DATA_B,
     }
   ],
+
+  tooltip:{
+    valueSuffix:' 分',
+  },
 
   // Zoom の３つ目のボタンを選択
   rangeSelector: {selected: 2},
@@ -234,6 +315,17 @@ var chart = new Highcharts.StockChart({
   },
 
 });
+
+
+
+
+
+
+
+
+
+
+
 </script>
 </body>
 </html>
