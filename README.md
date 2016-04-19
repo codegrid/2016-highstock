@@ -1,8 +1,12 @@
-# 高性能グラフライブラリHighstockを使いこなす
+# 2016-Highstock | CodeGrid
 
-CodeGridの「高性能グラフライブラリHighstockを使いこなす」の記事内で使用しているサンプルです。
+CodeGridの「おすすめライブラリつまみ食い | 第11回 Highstock」の記事内で使用しているサンプルです。
 
-Node.js がインストールされている状態であれば、下記手順で簡単にサンプルを試せます。
+- [demo_highstock01.html](http://codegrid.github.io/2016-stockchart/01/demo_highstock01.html)
+- [demo_highstock02.html](http://codegrid.github.io/2016-stockchart/01/demo_highstock02.html)
+
+
+Node.js がインストールされている状態であれば、下記手順でローカル環境でサンプルを試すことができます。
 
 - ターミナルを起動
 - `npm install` と入力
