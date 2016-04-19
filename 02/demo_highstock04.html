@@ -28,6 +28,7 @@
 <div id="container"></div>
 <script>
 
+// pickadate.jsの日本語化
 jQuery.extend( jQuery.fn.pickadate.defaults, {
   monthsFull: [ '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月' ],
   monthsShort: [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12' ],
@@ -38,8 +39,14 @@ jQuery.extend( jQuery.fn.pickadate.defaults, {
   close: '閉じる',
   format: 'yyyy/mm/dd'
 });
-function connectPickadate(renderTo, series){
 
+// レンジセレクタの日付入力フィールドとpickadateを連動させる関数
+function connectPickadate(
+  renderTo, // グラフの描画先
+  series // グラフデータ
+){
+
+  // グラフデータの一番小さい日付と一番大きい日付を求める
   var range = series.reduce(function(prev, item){
     var min = moment(item.data[0][0]).toDate();
     var max = moment(item.data[item.data.length-1][0]).toDate();
@@ -48,20 +55,40 @@ function connectPickadate(renderTo, series){
     return prev;
   }, {});
 
+  // renderToパラメータがID指定か要素指定かによりセレクタを変える
   var container = typeof renderTo === 'string' ? '#'+renderTo : renderTo;
+
+  // 日付期間の隠しフィールドを得る
+  // （画面に表示されてる入力エリアはSVGで描かれており、日付の操作は隠しフィールドと連携して行う）
   var $rangeSelectors = $('input.highcharts-range-selector', container);
+
+  // 開始日、終了日を順番に処理する
   $rangeSelectors.each(function(index, el){
+
+    // グラフデータ範囲外の日付は選択できないようにする
     $(el).pickadate({
       min: range.min,
       max: range.max
-    }).on('focus', function(){
+    })
+
+    // 日付フィールドにフォーカスした時
+    .on('focus', function(){
+
+      // pickadateのAPIを取得
       var picker = $(this).pickadate('picker');
+
+      // highstockで持っている日付期間をpickadateを開く度に設定する
+      // （月数・年のレンジセレクタ、ナビゲータで期間を変更した場合も連動させるには毎回日付を設定する必要がある）
       picker.set('select', moment(this.value, 'YYYY/MM/DD').toDate())
+
+      // pickadateの場合、タイミングをずらさないと２回クリックしないと呼び出せない
+      // （jQueryUIのdatepickerの場合はずらさなくても大丈夫）
       setTimeout(function(){
         picker.open();
       },0);
     });
   });
+
 }
 
 
@@ -230,11 +257,6 @@ Highcharts.setOptions({
 
 });
 
-console.log('hasData',Highcharts.Axis.prototype.hasData);
-
-
-
-
 
 
 Highcharts.Axis.prototype.hasData = function () {
@@ -305,7 +327,7 @@ var chart = new Highcharts.StockChart({
   legend: {enabled: true},
 
   // Y軸の見出しを表示
-  yAxis: {title: {text: '時間'}},
+  yAxis: {title: {text: '時間（分）'}},
 
   // ラベルのY軸を交互にずらす
   xAxis: {

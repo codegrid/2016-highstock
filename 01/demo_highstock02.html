@@ -59,12 +59,12 @@ var groupingDateFormats = {
 
 Highcharts.setOptions({
   global: {
-    // useUTC: false,
-    // timezoneOffset: new Date().getTimezoneOffset(),
+    // UTC（標準時）との時差を指定
     timezoneOffset: new Date().getTimezoneOffset(),
     // getTimezoneOffset: function ( timestamp ) {
     //   return new Date().getTimezoneOffset();
     // },
+    // useUTC: false,
   },
   lang: {
 
@@ -104,27 +104,43 @@ Highcharts.setOptions({
 
   },
 
+  // グラフのプロットに対する設定
   plotOptions: {
     series: {
+
+      // グラフがグルーピングされたときの日付フォーマット
       dataGrouping: {
         dateTimeLabelFormats: groupingDateFormats
       }
     }
   },
 
+  // ツールチップの設定
   tooltip:{
+
+    // ツールチップの日付フォーマット
     dateTimeLabelFormats: tooltipDateFormats,
+
+    // 小数点以下の表示桁数の設定
+    // 必要に応じHighcharts.StockChart()実行時に上書き指定する
     valueDecimals: 0
   },
 
+  // X軸の設定
   xAxis: {
+
+    // X軸の日付フォーマット
     dateTimeLabelFormats: axisDateFormats,
   },
 
+  // Y軸の設定
   yAxis: {
+
+    // Y軸の日付フォーマット
     dateTimeLabelFormats: axisDateFormats,
   },
 
+  // レンジセレクタの設定
   rangeSelector: {
 
     // global.useUTC:falseの場合は以下補正が必要
@@ -136,42 +152,17 @@ Highcharts.setOptions({
 
     // ボタンのデザイン
     buttonTheme: {
-      width: 34,
-      r: 2, // コーナーを丸める
-      states: {
-        select: { // 選択時のデサイン
-          fill: '#00aaff',
-          style: {
-            color: 'white'
-          }
-        }
-      }
+      width: 34, r: 2,
+      states: {select: {fill: '#00aaff', style: { color: 'white' }}}
     },
+
+    // 各ボタンの期間とラベルを設定
     buttons: [
-      {
-        type: 'month', // 月単位
-        count: 1,      // １ヶ月
-        text: '1ヶ月'   // ボタンのラベル
-      },
-      {
-        type: 'month',
-        count: 3,
-        text: '3ヶ月'
-      },
-      {
-        type: 'month',
-        count: 6,
-        text: '6ヶ月'
-      },
-      {
-        type: 'year',
-        count: 1,
-        text: '1年'
-      },
-      {
-        type: 'all',
-        text: 'すべて'
-      }
+      {type: 'month', count: 1, text: '1ヶ月'},
+      {type: 'month', count: 3, text: '3ヶ月'},
+      {type: 'month', count: 6, text: '6ヶ月'},
+      {type: 'year',  count: 1, text: '1年'  },
+      {type: 'all',   text: 'すべて'}
     ],
 
     // 日付指定フィールドのフォーマット
@@ -224,7 +215,7 @@ var chart = new Highcharts.StockChart({
   legend: {enabled: true},
 
   // Y軸の見出しを表示
-  yAxis: {title: {text: '時間'}},
+  yAxis: {title: {text: '時間（分）'}},
 
   // ラベルのY軸を交互にずらす
   xAxis: {
