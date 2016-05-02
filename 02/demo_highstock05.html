@@ -266,9 +266,9 @@ Highcharts.setOptions({
 
 
 
-Highcharts.Axis.prototype.hasData = function () {
-  return this.hasVisibleSeries||t(this.min)&&t(this.max)&&!!this.tickPositions;
-};
+// Highcharts.Axis.prototype.hasData = function () {
+//   return this.hasVisibleSeries||t(this.min)&&t(this.max)&&!!this.tickPositions;
+// };
 
 // Highcharts.Axis.prototype.hasData = function () {
 //     return this.hasVisibleSeries;
@@ -310,8 +310,10 @@ var chart = new Highcharts.StockChart({
   series: [
     {
       yAxis: 0,
+      color:'#0077aa',
+      zIndex:2,
       tooltip:{
-        valueSuffix:' 分',
+        valueSuffix:'分',
       },
       name: '稼働時間',
    // data: [ [日時, 値], [日時, 値], [日時, 値], ... ],
@@ -319,12 +321,41 @@ var chart = new Highcharts.StockChart({
     },
     {
       yAxis: 1,
+      color:'#6f3c8e',
+      zIndex:1,
       tooltip:{
-        valueSuffix:' 秒',
+        valueSuffix:'秒',
       },
       name: '停止時間',
    // data: [ [日時, 値], [日時, 値], [日時, 値], ... ],
       data: DEMO_DATA_B,
+    },
+    {
+      type: 'column',
+      // color:'#ffaf5f',
+//      color: '#a48607',
+//      color: '#e4c647',
+      color: '#f4d657',
+      yAxis: 2,
+      tooltip:{
+        valueSuffix:'L',
+      },
+      name: '消費燃料',
+   // data: [ [日時, 値], [日時, 値], [日時, 値], ... ],
+      data: DEMO_DATA_C,
+    },
+    {
+      type: 'column',
+//      color: '#a4d655',
+      // color: '#b4e665',
+      color: '#c4f675',
+      yAxis: 3,
+      tooltip:{
+        valueSuffix:'KW',
+      },
+      name: '消費電力',
+   // data: [ [日時, 値], [日時, 値], [日時, 値], ... ],
+      data: DEMO_DATA_D,
     }
   ],
 
@@ -332,24 +363,42 @@ var chart = new Highcharts.StockChart({
   //   valueSuffix:' 分',
   // },
 
-  // Zoom の３つ目のボタンを選択
-  rangeSelector: {selected: 2},
+  // Zoom のつ目のボタンを選択
+  rangeSelector: {selected: 1},
 
   // 凡例（グラフ下部のグラフ名）を表示
   legend: {enabled: true},
 
   // Y軸の見出しを表示
-//  yAxis: {title: {text: '時間（分）'}},
   yAxis: [
     {
-      title: {text: '稼働時間（分）'},
-      // labels: {align: 'right', rotation: 270},
+      title:  {style:{color:'#0077aa'}, text: '稼働時間（分）'},
+      labels: {style:{color:'#0077aa'}},
       opposite: false,
+      showEmpty: false,
     },
     {
-      title: {text: '停止時間（秒）'},
-      // labels: {align: 'left', rotation: 90,},
+      title:  {style:{color:'#6f3c8e'}, text: '停止時間（秒）'},
+      labels: {style:{color:'#6f3c8e'}},
+      opposite: false,
+      showEmpty: false,
+    },
+    {
+//     max: 1700,
+    // max: 1500,
+      // max: 2000,
+      title:  {style:{color:'#a48607'}, text: '消費燃料（L）'},
+      labels: {style:{color:'#a48607'}},
       opposite: true,
+      showEmpty: false,
+    },
+    {
+//      max: 1200,
+      // max: 1000,
+      title:  {style:{color:'#a4d655'}, text: '消費電力（KW）'},
+      labels: {style:{color:'#a4d655'}},
+      opposite: true,
+      showEmpty: false,
     }
   ],
 
@@ -361,10 +410,6 @@ var chart = new Highcharts.StockChart({
   },
 
 });
-
-
-
-
 
 
 

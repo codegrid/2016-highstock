@@ -259,9 +259,9 @@ Highcharts.setOptions({
 
 
 
-Highcharts.Axis.prototype.hasData = function () {
-  return this.hasVisibleSeries||t(this.min)&&t(this.max)&&!!this.tickPositions;
-};
+// Highcharts.Axis.prototype.hasData = function () {
+//   return this.hasVisibleSeries||t(this.min)&&t(this.max)&&!!this.tickPositions;
+// };
 
 // Highcharts.Axis.prototype.hasData = function () {
 //     return this.hasVisibleSeries;
@@ -310,6 +310,9 @@ var chart = new Highcharts.StockChart({
       data: DEMO_DATA_A,
     },
     {
+      tooltip:{
+        valueSuffix:' 秒',
+      },
       name: '停止時間',
    // data: [ [日時, 値], [日時, 値], [日時, 値], ... ],
       data: DEMO_DATA_B,
