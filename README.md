@@ -2,13 +2,6 @@
 
 CodeGridの「おすすめライブラリつまみ食い | 第11、12回 Highstock」の記事内で使用しているサンプルです。
 
-- [demo_highstock01.html](http://codegrid.github.io/2016-stockchart/01/demo_highstock01.html)
-- [demo_highstock02.html](http://codegrid.github.io/2016-stockchart/01/demo_highstock02.html)
-- [demo_highstock03.html](http://codegrid.github.io/2016-stockchart/02/demo_highstock03.html)
-- [demo_highstock04.html](http://codegrid.github.io/2016-stockchart/02/demo_highstock04.html)
-- [demo_highstock05.html](http://codegrid.github.io/2016-stockchart/02/demo_highstock05.html)
-
-
 Node.js がインストールされている状態であれば、下記手順でローカル環境でサンプルを試すことができます。
 
 - ターミナルを起動
